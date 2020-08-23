@@ -1,0 +1,10 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: self-signed
+spec:
+  dnsNames:
+    - example.com
+  secretName: self-signed
+  issuerRef:
+    name: self-signed
