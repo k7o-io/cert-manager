@@ -1,0 +1,25 @@
+name: CI/CD
+
+on: [push, pull_request]
+
+jobs:
+  ci-cd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ctison/actions/conftest@master
+      - uses: ctison/actions/kustomize@master
+      - uses: ctison/actions/k3d@master
+      - name: Test
+        run: |
+          k3d cluster create --no-lb --wait --timeout=30m k3d
+          kubectl wait deploy --all -n kube-system --for condition=available --timeout=30m
+          make install
+      - name: Deploy to staging
+        if: github.ref == 'refs/heads/master'
+        env:
+          K8S_STAGING: ${{secrets.K8S_STAGING}}
+        run: |
+          echo "$K8S_STAGING" > kubeconfig
+          KUBECONFIG="$PWD/kubeconfig" make install K8Z=prod
+          rm kubeconfig
