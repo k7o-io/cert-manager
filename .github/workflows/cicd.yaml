@@ -20,6 +20,7 @@ jobs:
         env:
           K8S_STAGING: ${{secrets.K8S_STAGING}}
         run: |
+          if test "$K8S_STAGING" = ""; then exit; fi
           echo "$K8S_STAGING" > kubeconfig
           KUBECONFIG="$PWD/kubeconfig" make install K8Z=prod
           rm kubeconfig
