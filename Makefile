@@ -1,6 +1,6 @@
 .PHONY: lint install test uninstall
 
-VERSION   ?= v1.0.1
+VERSION   ?= v1.2.0
 K8Z       ?= dev
 NAMESPACE ?= cert-manager
 SHELL     := bash --noprofile --norc -O nullglob -euo pipefail
